@@ -1,11 +1,13 @@
 use std::net::SocketAddr;
 
 use axum::{routing::get, Json};
-use utoipa::OpenApi;
+use serde::Serialize;
+use utoipa::{OpenApi, ToSchema};
 use utoipa_swagger_ui::SwaggerUi;
 use axum::response::{IntoResponse, Response};
 use utoipa_axum::routes;
 use utoipa_axum::router::OpenApiRouter;
+use utoipa::ToResponse;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]
@@ -23,16 +25,26 @@ async fn openapi() -> Json<utoipa::openapi::OpenApi> {
     Json(ApiDoc::openapi())
 }
 
+#[derive(ToSchema)]
+#[derive(Serialize)]
+struct Pet {
+    id: u64,
+    name: String,
+}
+
 /// Return JSON version of an hello world message
 #[utoipa::path(
 get,
 path = "/api/hello.json",
 responses(
-    (status = 200, description = "JSON file", body = ())
+    (status = 200, description = "JSON file", body = Pet)
 )
 )]
 async fn hello_lib() -> Response {
-    "hello from the library".into_response()
+    Json(Pet {
+        id: 25,
+        name: String::from("George"),
+    }).into_response()
 }
 
 #[tokio::main]
