@@ -64,7 +64,7 @@ pub async fn create_item(body: Json<Item>) -> Response {
 /// Get item from database by item id
 #[utoipa::path(
 get,
-path = "/items/{id}",
+path = "/api/items/{id}",
 responses(
     (status = 200, description = "Item found successfully", body = Item),
     (status = NOT_FOUND, description = "Item was not found", body = ())
