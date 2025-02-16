@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS items
 (
-    item_id     INTEGER PRIMARY KEY NOT NULL,
+    id     INTEGER PRIMARY KEY NOT NULL,
     name        TEXT                NOT NULL,
     description TEXT                NOT NULL,
     damages     TEXT                NOT NULL
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS items
 
 CREATE TABLE IF NOT EXISTS tags
 (
-    tag_id      INTEGER PRIMARY KEY NOT NULL,
+    id      INTEGER PRIMARY KEY NOT NULL,
     name        TEXT                NOT NULL,
     generic     BOOLEAN             NOT NULL DEFAULT 0
 );
@@ -22,20 +22,20 @@ CREATE TABLE IF NOT EXISTS item_tags
 
 CREATE TABLE IF NOT EXISTS images
 (
-    image_id    INTEGER PRIMARY KEY NOT NULL,
+    id    INTEGER PRIMARY KEY NOT NULL,
     item_id     INTEGER REFERENCES item(item_id) on DELETE CASCADE NOT NULL,
     description TEXT                NOT NULL,
     image_name  TEXT                NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS users(
-    user_id     INTEGER PRIMARY KEY NOT NULL,
+    id     INTEGER PRIMARY KEY NOT NULL,
     username    TEXT                NOT NULL,
     password    TEXT                NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS borrows(
-    borrow_id    INTEGER PRIMARY KEY NOT NULL,
+    id    INTEGER PRIMARY KEY NOT NULL,
     item_id      INTEGER REFERENCES item(item_id) on DELETE CASCADE NOT NULL,
     user_id      INTEGER REFERENCES user(user_id) on DELETE CASCADE NOT NULL,   
     damage       BOOLEAN                NOT NULL DEFAULT 0,
