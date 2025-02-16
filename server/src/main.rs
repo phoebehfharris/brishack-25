@@ -1,15 +1,17 @@
 use std::net::SocketAddr;
 
 use axum::Json;
+use database::Db;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use utoipa_axum::routes;
 use utoipa_axum::router::OpenApiRouter;
 
-use sqlx::{migrate::MigrateDatabase, Row, Sqlite, SqlitePool, FromRow};
+use sqlx::{FromRow, Row};
 
 mod example;
 mod items;
+mod database;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]
@@ -27,8 +29,6 @@ async fn openapi() -> Json<utoipa::openapi::OpenApi> {
     Json(ApiDoc::openapi())
 }
 
-const DATABASE_URL: &str = "sqlite://sqlite.db";
-
 #[derive(Clone, FromRow, Debug)]
 struct Item {
     id: i64,
@@ -38,37 +38,9 @@ struct Item {
 
 #[tokio::main]
 async fn main() {
-    if !Sqlite::database_exists(DATABASE_URL).await.unwrap_or(false) {
-        println!("Creating sqlite db {}", DATABASE_URL);
-        match Sqlite::create_database(DATABASE_URL).await {
-            Ok(_) => println!("Database created"),
-            Err(e) => panic!("{}", e),
-        }
-    }
-    else {
-        println!("db already exists");
-    }
 
-    let db = SqlitePool::connect(DATABASE_URL).await.unwrap();
-
-    let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    let migrations = std::path::Path::new(&crate_dir).join("migrations");
-
-    println!("{:?}", migrations);
-
-    let m2 = sqlx::migrate::Migrator::new(migrations).await.unwrap();
-    println!("{:?}", m2);
-    let migration_results = m2.run(&db).await;
-
-    match migration_results {
-        Ok(_) => println!("Migration success"),
-        Err(error) => {
-            panic!("error: {}", error);
-        }
-    }
-
-    println!("migration: {:?}", migration_results);
-
+    database::init().await;
+    let pool = &database::get_db().await.pool;
 
     let result = sqlx::query(
         "SELECT name
@@ -76,7 +48,7 @@ async fn main() {
         WHERE type ='table'
     AND name NOT LIKE 'sqlite_%';",
     )
-    .fetch_all(&db)
+    .fetch_all(pool)
     .await
     .unwrap();
 
@@ -87,13 +59,13 @@ async fn main() {
     let result = sqlx::query("INSERT INTO items (description, done) VALUES (?,?)")
     .bind("the explanation of what this is")
     .bind(true)
-    .execute(&db)
+    .execute(pool)
     .await
     .unwrap();
 
     println!("Query result: {:?}", result);
 
-    let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(&db).await.unwrap();
+    let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(pool).await.unwrap();
     for r in results {
         println!(
             "id: {}, desc: {}, done: {}",
