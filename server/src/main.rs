@@ -9,6 +9,7 @@ use utoipa_axum::router::OpenApiRouter;
 use sqlx::{migrate::MigrateDatabase, Row, Sqlite, SqlitePool, FromRow};
 
 mod example;
+mod items;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]
@@ -102,7 +103,10 @@ async fn main() {
     let socket_address: SocketAddr = "127.0.0.1:8081".parse().unwrap();
     let listener = tokio::net::TcpListener::bind(socket_address).await.unwrap();
 
-    let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi()).routes(routes!(example::hello_lib)).split_for_parts();
+    let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi())
+    .routes(routes!(example::hello_lib))
+    .routes(routes!(items::get_items))
+    .split_for_parts();
 
     let router = router
         .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", api.clone()));
