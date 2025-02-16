@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use axum::Json;
 use database::Db;
+use items::create_item;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use utoipa_axum::routes;
@@ -73,6 +74,7 @@ async fn main() {
     .routes(routes!(example::hello_lib))
     .routes(routes!(items::get_items))
     .routes(routes!(items::get_item_by_id))
+    .routes(routes!(items::create_item))
     .split_for_parts();
 
     let router = router

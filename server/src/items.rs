@@ -1,16 +1,17 @@
-use axum::http::StatusCode;
+use axum::{extract::FromRequestParts, http::StatusCode};
 use axum::response::Response;
-use axum::Json;
+// use axum::Json;
 use utoipa::ToSchema;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use axum::response::IntoResponse;
 use sqlx::FromRow;
-use axum::extract::Path;
+use axum::extract::{Path, Json};
 
 use crate::database::get_db;
 
 #[derive(ToSchema)]
 #[derive(Serialize)]
+#[derive(Deserialize)]
 #[derive(Clone, FromRow, Debug)]
 pub struct Item {
     id: u32,
@@ -28,6 +29,23 @@ responses(
 )
 )]
 pub async fn get_items() -> Response {
+    let pool = &get_db().await.pool;
+    let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(pool).await.unwrap();
+    Json(results).into_response()
+}
+
+/// Creates an item
+#[utoipa::path(
+post,
+path = "/api/items",
+request_body = Item,
+responses(
+    (status = 200, description = "JSON file")
+)
+)]
+#[axum::debug_handler]
+pub async fn create_item(body: Json<Item>) -> Response {
+    println!("{:?}", body);
     let pool = &get_db().await.pool;
     let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(pool).await.unwrap();
     Json(results).into_response()
