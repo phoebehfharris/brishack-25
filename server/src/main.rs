@@ -2,6 +2,7 @@ use std::net::SocketAddr;
 
 use axum::{routing::get, Json};
 use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]
@@ -24,7 +25,8 @@ async fn main() {
     let socket_address: SocketAddr = "127.0.0.1:8080".parse().unwrap();
     let listener = tokio::net::TcpListener::bind(socket_address).await.unwrap();
 
-    let app = axum::Router::new().route("/api-docs/openapi.json", get(openapi));
+    let app = axum::Router::new()/*.route("/api-docs/openapi.json", get(openapi))*/
+    .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()));
 
     axum::serve(listener, app.into_make_service())
     .await
