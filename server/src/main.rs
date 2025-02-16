@@ -56,22 +56,16 @@ async fn main() {
         println!("[{}]: {:?}", idx, row.get::<String, &str>("name"));
     }
 
-    let result = sqlx::query("INSERT INTO items (description, done) VALUES (?,?)")
+    let result = sqlx::query("INSERT INTO items (description, name, damages) VALUES (?,?,?)")
     .bind("the explanation of what this is")
-    .bind(true)
+    .bind("leafblower")
+    .bind("this is not damaged")
     .execute(pool)
     .await
     .unwrap();
 
     println!("Query result: {:?}", result);
 
-    let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(pool).await.unwrap();
-    for r in results {
-        println!(
-            "id: {}, desc: {}, done: {}",
-            r.id, r.description, r.done
-        );
-    }
     let socket_address: SocketAddr = "127.0.0.1:8081".parse().unwrap();
     let listener = tokio::net::TcpListener::bind(socket_address).await.unwrap();
 
