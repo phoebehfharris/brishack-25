@@ -3,6 +3,7 @@ use std::net::SocketAddr;
 use axum::Json;
 use database::Db;
 use items::create_item;
+use tags::get_tags;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 use utoipa_axum::routes;
@@ -13,6 +14,7 @@ use sqlx::{FromRow, Row};
 mod example;
 mod items;
 mod database;
+mod tags;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]
@@ -67,6 +69,42 @@ async fn main() {
 
     println!("Query result: {:?}", result);
 
+    let result = sqlx::query("INSERT INTO tags (name, generic) VALUES (?,?)")
+    .bind("lawnmower")
+    .bind(true)
+    .execute(pool)
+    .await
+    .unwrap();
+
+    println!("Query result: {:?}", result);
+
+    let result = sqlx::query("INSERT INTO tags (name, generic) VALUES (?,?)")
+    .bind("washing machine")
+    .bind(true)
+    .execute(pool)
+    .await
+    .unwrap();
+
+    println!("Query result: {:?}", result);
+
+    let result = sqlx::query("INSERT INTO tags (name, generic) VALUES (?,?)")
+    .bind("the kidney i forgot in the fridge last week")
+    .bind(false)
+    .execute(pool)
+    .await
+    .unwrap();
+
+    println!("Query result: {:?}", result);
+
+    let result = sqlx::query("INSERT INTO tags (name, generic) VALUES (?,?)")
+    .bind("my left kidney")
+    .bind(false)
+    .execute(pool)
+    .await
+    .unwrap();
+
+    println!("Query result: {:?}", result);
+
     let socket_address: SocketAddr = "127.0.0.1:8081".parse().unwrap();
     let listener = tokio::net::TcpListener::bind(socket_address).await.unwrap();
 
@@ -76,6 +114,7 @@ async fn main() {
     .routes(routes!(items::get_item_by_id))
     .routes(routes!(items::create_item))
     .routes(routes!(items::delete_item_by_id))
+    .routes(routes!(tags::get_tags))
     .split_for_parts();
 
     let router = router
