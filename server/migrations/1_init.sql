@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS borrows(
     borrow_id    INTEGER PRIMARY KEY NOT NULL,
     item_id      INTEGER REFERENCES item(item_id) on DELETE CASCADE NOT NULL,
-    user_id      INTEGER REFERENCES user(user_id) on DELETE CASCADE NOT NULL   
+    user_id      INTEGER REFERENCES user(user_id) on DELETE CASCADE NOT NULL,   
     damage       BOOLEAN                NOT NULL DEFAULT 0,
     borrrow_date DATETIME               NOT NULL DEFAULT CURRENT_TIMESTAMP,
     due_date     DATETIME               NOT NULL DEFAULT CURRENT_TIMESTAMP,
