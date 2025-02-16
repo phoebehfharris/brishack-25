@@ -1,11 +1,14 @@
 verb /endpoint/ - *description*
     - body option - **default** - *description*
 
-GET /item/ - *gets a list of items*
+GET /item/ - *gets a list of matching items*
     - count? - **30** - *maximum number of matches returned*
     - tags? - **none** - *matching tags*
     - name? - **none** - *matching sub-name*
     - description? - **none** - *matching sub-description*
+
+GET /item/info - *gets all information of a queried item*
+    - item_id - *id of item queried*
 
 POST /item/ - *add new item to database*
     - name - *item name*
@@ -38,11 +41,30 @@ POST /tags/ - *add a new tag to database*
     - name - *tag name*
     - general - *whether or not the tag is generic or a specific item model (e.g. a specific set of plates)*
 
-GET /tags/list - *return a list of items tagged with all specified tags*
-    - tag_ids - **ids of queried tags**
+GET /tags/list/ - *return a list of items tagged with all specified tags*
+    - tag_ids - *ids of queried tags*
     - available? - **false** - *whether or not the returned item ids must be available*
 
-GET /tags/count - *return a count of items tagged with all specified tags*
-    - tag_id - **ids of queried tags**
+GET /tags/count/ - *return a count of items tagged with all specified tags*
+    - tag_id - *ids of queried tags*
 
+GET /auth/login/ - *return user_id if user exists*
+    - username - *username*
+    - password - *hashed password*
+
+POST /auth/register/ - *attempt to register user*
+    - username - *unique username*
+    - password - *hashed password*
+
+POST /borrow/borrow - *request to borrow specified item*
+    - item_id - *id of requested item*
+    - user_id - *id of user requesting to borrow item*
+    - borrow_date_start? - **today** - *start of borrow period*
+    - borrow_date_end? - **today** - *end of borrow period*
+    - reason? - **0** - *reason for borrowing (0 - borrowed, 1 - under maintenence, 2 - out of circulation)*
+
+POST /borrow/return - *return borrowed item*
+    - borrow_id - *id of borrow occurance*
+    - damage? - **none** - *description of damages occured*
+    - return_date? - **today** - *date item was returned*
 
