@@ -72,6 +72,7 @@ async fn main() {
     let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi())
     .routes(routes!(example::hello_lib))
     .routes(routes!(items::get_items))
+    .routes(routes!(items::get_item_by_id))
     .split_for_parts();
 
     let router = router
