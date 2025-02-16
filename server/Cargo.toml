@@ -5,5 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.8.1"
+serde = "1.0.217"
 tokio = { version = "1.43.0", features = ["full"] }
 utoipa = "5.3.1"
+utoipa-axum = "0.2.0"
