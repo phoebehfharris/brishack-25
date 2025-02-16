@@ -34,7 +34,6 @@ GET /image/ - *get images of item*
     - count? - **5** - *maximum number of matching images to return*
 
 GET /tags/ - *gets list of tags*
-    - count? - **10** - *maximum number of matches returned*
     - with? - **none** - *tags which include substring*
     
 POST /tags/ - *add a new tag to database*
@@ -47,6 +46,11 @@ GET /tags/list/ - *return a list of items tagged with all specified tags*
 
 GET /tags/count/ - *return a count of items tagged with all specified tags*
     - tag_id - *ids of queried tags*
+
+
+
+
+
 
 GET /auth/login/ - *return user_id if user exists*
     - username - *username*
