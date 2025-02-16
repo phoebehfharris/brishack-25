@@ -1,3 +1,4 @@
+use axum::http::StatusCode;
 use axum::response::Response;
 use axum::Json;
 use utoipa::ToSchema;
@@ -51,10 +52,8 @@ pub async fn get_item_by_id(Path(id): Path<u32>) -> Response  {
     println!("the item id {}",id);
     let result2 = sqlx::query_as::<_, Item>("SELECT * FROM items WHERE id=?").bind(id).fetch_one(pool).await;
 
-    if result2.is_ok() {
-        return Json(result2.unwrap()).into_response();
-    }
-    else {
-        return Json(()).into_response();
+    match result2 {
+        Ok(item) => Json(item).into_response(),
+        Err(_) => StatusCode::NOT_FOUND.into_response(),
     }
 }
