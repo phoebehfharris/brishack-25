@@ -75,6 +75,7 @@ async fn main() {
     .routes(routes!(items::get_items))
     .routes(routes!(items::get_item_by_id))
     .routes(routes!(items::create_item))
+    .routes(routes!(items::delete_item_by_id))
     .split_for_parts();
 
     let router = router

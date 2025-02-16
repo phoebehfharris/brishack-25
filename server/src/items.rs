@@ -83,3 +83,28 @@ pub async fn get_item_by_id(Path(id): Path<u32>) -> Response  {
         Err(_) => StatusCode::NOT_FOUND.into_response(),
     }
 }
+
+/// Delete item by id
+///
+/// Delete item from database by item id
+#[utoipa::path(
+delete,
+path = "/api/items/{id}",
+responses(
+    (status = 200, description = "Item deleted successfully", body = ()),
+          (status = NOT_FOUND, description = "Item was not found", body = ())
+),
+params(
+    ("id", description = "Item database id to delete Item for"),
+)
+)]
+pub async fn delete_item_by_id(Path(id): Path<u32>) -> Response  {
+    let pool = &get_db().await.pool;
+    println!("the item id {}",id);
+    let result2 = sqlx::query_as::<_, ()>("DELETE FROM items WHERE id=?").bind(id).fetch_one(pool).await;
+
+    match result2 {
+        Ok(_) => StatusCode::OK.into_response(),
+        Err(_) => StatusCode::NOT_FOUND.into_response(),
+    }
+}
