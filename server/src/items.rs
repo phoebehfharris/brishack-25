@@ -47,8 +47,16 @@ responses(
 pub async fn create_item(body: Json<Item>) -> Response {
     println!("{:?}", body);
     let pool = &get_db().await.pool;
-    let results = sqlx::query_as::<_, Item>("SELECT * FROM items").fetch_all(pool).await.unwrap();
-    Json(results).into_response()
+
+    sqlx::query("INSERT INTO items (name, description, damages) VALUES (?,?,?)")
+    .bind(body.name.clone())
+    .bind(body.description.clone())
+    .bind(body.damages.clone())
+    .execute(pool)
+    .await
+    .unwrap();
+
+    StatusCode::OK.into_response()
 }
 
 /// Get item by id
