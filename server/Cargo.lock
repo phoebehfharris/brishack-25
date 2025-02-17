@@ -852,6 +852,7 @@ name = "library-server"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "hex",
  "serde",
  "sqlx",
  "tokio",

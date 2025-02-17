@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.8.1", features = ["macros"] }
+hex = "0.4.3"
 serde = "1.0.217"
 sqlx = { version = "0.8.3", features = ["runtime-tokio", "sqlite"] }
 tokio = { version = "1.43.0", features = ["full"] }

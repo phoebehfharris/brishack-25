@@ -2,7 +2,7 @@ use std::net::SocketAddr;
 
 use axum::Json;
 use database::Db;
-use image::get_image;
+use image::{create_image, get_image};
 use items::create_item;
 use tags::get_tags;
 use utoipa::OpenApi;
@@ -121,6 +121,7 @@ async fn main() {
     .routes(routes!(tags::create_tag))
     .routes(routes!(tags::get_items))
     .routes(routes!(image::get_image))
+    .routes(routes!(image::create_image))
     .split_for_parts();
 
     let router = router
