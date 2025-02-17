@@ -103,8 +103,5 @@ pub async fn delete_item_by_id(Path(id): Path<u32>) -> Response  {
     println!("the item id {}",id);
     let result2 = sqlx::query_as::<_, ()>("DELETE FROM items WHERE id=?").bind(id).fetch_one(pool).await;
 
-    match result2 {
-        Ok(_) => StatusCode::OK.into_response(),
-        Err(_) => StatusCode::NOT_FOUND.into_response(),
-    }
+    StatusCode::OK.into_response()
 }
