@@ -115,6 +115,8 @@ async fn main() {
     .routes(routes!(items::create_item))
     .routes(routes!(items::delete_item_by_id))
     .routes(routes!(tags::get_tags))
+    .routes(routes!(tags::create_tag))
+    .routes(routes!(tags::get_items))
     .split_for_parts();
 
     let router = router
