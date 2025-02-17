@@ -15,6 +15,7 @@ mod example;
 mod items;
 mod database;
 mod tags;
+mod auth;
 
 #[derive(OpenApi)]
 #[openapi(paths(openapi))]

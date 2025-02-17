@@ -54,11 +54,11 @@ GET /tags/count/ - *return a count of items tagged with all specified tags*
 
 
 
-GET /auth/login/ - *return user_id if user exists*
+GET /auth/ - *return user_id if user exists*
     - username - *username*
     - password - *hashed password*
 
-POST /auth/register/ - *attempt to register user*
+POST /auth/ - *attempt to register user*
     - username - *unique username*
     - password - *hashed password*
 
