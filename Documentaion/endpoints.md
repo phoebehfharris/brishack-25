@@ -42,8 +42,10 @@ POST /tags/ - *add a new tag to database*
 
 GET /tags/list/ - *return a list of items tagged with all specified tags*
     - tag_ids - *ids of queried tags*
-    - available? - **false** - *whether or not the returned item ids must be available*
+    - available - *whether or not the returned item ids must be available*
 
+
+//ignoring for now
 GET /tags/count/ - *return a count of items tagged with all specified tags*
     - tag_id - *ids of queried tags*
 
@@ -64,7 +66,7 @@ POST /borrow/borrow - *request to borrow specified item*
     - item_id - *id of requested item*
     - user_id - *id of user requesting to borrow item*
     - borrow_date_start? - **today** - *start of borrow period*
-    - borrow_date_end? - **today** - *end of borrow period*
+    - borrow_date_end? - **today** - *end of borrow periodday** - *end of borrow period*
     - reason? - **0** - *reason for borrowing (0 - borrowed, 1 - under maintenence, 2 - out of circulation)*
 
 POST /borrow/return - *return borrowed item*
